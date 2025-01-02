@@ -1,13 +1,15 @@
 import ollama
 
+
 res = ollama.chat(
     model="llama3.2",
     messages=[
         {
             "role": "user",
-            "content": "why is the ocean so salty?",
+            "content": "Why is the ocean so salty?",
         },
     ],
+    config={"temperature": 0.7},
     stream=False,
 )
 # for chunk in res:
