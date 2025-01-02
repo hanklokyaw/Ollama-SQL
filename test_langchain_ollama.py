@@ -3,7 +3,7 @@ import sqlite3
 from tabulate import tabulate
 
 # Initialize the LLM
-MODEL_NAME = "llama3.3"
+MODEL_NAME = "llama3.2"
 llm = ChatOllama(model=MODEL_NAME, temperature=0.0)
 
 # Function to extract metadata from the database
