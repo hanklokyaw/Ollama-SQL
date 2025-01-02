@@ -3,7 +3,7 @@ import sqlite3
 from tabulate import tabulate
 
 # Initialize the LLM
-MODEL_NAME = "llama3.2"
+MODEL_NAME = "sqlcoder"
 llm = ChatOllama(model=MODEL_NAME, temperature=0.0)
 
 # Function to extract metadata from the database
@@ -85,9 +85,13 @@ def generate_sql_query(user_input, metadata, distinct_values):
     '{user_input}'
 
     Write a valid SQL query for the database based on the structure above. Ensure the query is efficient and syntactically correct.
+    RETURN ONLY SQL QUERY.
     """
     response = llm.invoke(prompt)
-    return response.strip()
+    print("*****************************\n")
+    print(response)
+    print("*****************************\n\n")
+    return response.content.strip()
 
 # Function to retry and refine SQL query if needed
 def retry_query(user_input, previous_query, metadata, distinct_values):
@@ -101,7 +105,7 @@ def retry_query(user_input, previous_query, metadata, distinct_values):
 
     Please refine the query to make it more accurate.
     """
-    return llm.invoke(prompt).strip()
+    return llm.invoke(prompt).content.strip()
 
 # Function to execute SQL query and fetch results
 def execute_query(db_path, query):
