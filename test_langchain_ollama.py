@@ -74,17 +74,51 @@ def format_metadata(metadata, distinct_values):
             formatted.append(f"{column}: {', '.join(map(str, values))}")
     return "\n".join(formatted)
 
+def hardcoded_metadata(user_input):
+    prompt = f"""
+1. Table name: gems
+2. Column names (all TEXT format): "Name", "Color Code", "Color Description", "Diamond Grade", "Size (mm)", "Material", "Type", "Cut (Shape)"
+3. Top 3 sample rows:
+   1-('faceted-1.0BK-ce', 'BK', 'Black', None, '1', 'Ceramic', 'Synthetic', 'Round'),
+   2-('faceted-1.25BK-ce', 'BK', 'Black', None, '1.25', 'Ceramic', 'Synthetic', 'Round'),
+   3-('faceted-15BK-ce', 'BK', 'Black', None, '15', 'Ceramic', 'Synthetic', 'Round')
+4. Unique values from columns except "Name"
+   Color Code: BK, CY, DM, EM, FV, LB, MR, MW, PA, PE, RU, SA, SY, #1, #11, #14, #17, #20, #28, #30, #32, #38, #45, #5, #52, #55, #6, #7, #8, #9, FOP, AGDI, AL, AM, AQ, BKO, BTQ, BZ, CAC, CI, CRY, DCA, DCB, DCG, DCGl, DCP, DI, DIABL, DIABLK, DIABR, DIACG, DIAPK, DIASI, DIAVS, GN, GRUQ, GT, HE, IO, JD, LAB, LPS, MA, MO, PCT, PT, PUDI, RH, RMS, RQ, RUQ, SAB, SADO, SAGR, SAO, SAP, SAPK, SAPU, SAW, SAY, SP, SQ, TE, Tou, MY, TQ, TS, TZ, AB, AR, AY, BR, CB, CH, CS, CZ, DIAAQB, DIAFGHSIge, DIALBR, DIATB, FB, FM, FP, GR, JT, LC, LI, LV, MCA, MG, PI, PR, PS, PST, PW, RC, RD, RSP, SAL, SF, SG, SLP, SN, SS, TN, WO, WS, AQB, BL, BP, BW, BZR, HY, IB, KH, LP, MYG, MYS, PB, PPY, PRD, RAF, SB, SKB, SL, VI, Vi, VIO, WH, YE
+   Color Description: Black, Canary Yellow, Dusty Morganite, Emerald, Fading Violet, London Blue, Morganite, Milky White, Paradise Green, Peridot, Ruby, Sapphire, Sunrise Yellow, Teal Opal, Lime Green Opal, Blue Green Opal, White Opal, Red Opal, Yellow Opal, Orange Opal, Black Opal, Light Purple Opal, Bold Red Opal, Dark Blue Opal, Purple Opal, Hot Pink Opal, Light Blue Opal, Bubblegum Pink Opal, Light Pink Opal, Dark Pink Opal, Apple Green Diamond, Alexandrite, Amethyst, Aquamarine, Black Onyx, Black Tourmalinated Quartz, Blue Zircon, Carnelian, Citrine, Chrysoprase, Dichroic Aqua, Dichroic Blue, Dichroic Gold, Dichroic Glass, Dichroic Pink, White Diamond, Blue Diamond, Black Diamond, Brown Diamond, Diamond Cognac, Pink Diamond, White Diamond SI, White Diamond VS, Garnet, Golden Rutilated Quartz, Green Tourmaline, Hematite, Iolite, Jade, Labradorite, Lapis, Moss Agate, Moonstone, Purple Copper Turquoise, Pink Tourmaline, Purple Diamond, Rhodolite, Rainbow Moonstone, Rose Quartz, Rutilated Quartz, Blue Sapphire 1, Blue Sapphire 2, Blue Sapphire 3, Dark Orange Sapphire, Green Sapphire, Orange Sapphire, Pink Sapphire 1, Pink Sapphire 2, Pink Sapphire 3, Pink Sapphire, Pink Sapphire 4, Purple Sapphire, Purple Sapphire 3, Purple Sapphire 1, White Sahhpire, Yellow Sapphire, Spectrolite, Smoky Quartz, Tiger Eye, Tourmalinated Quartz, Mystic, Turquoise, Tsavorite, Tanzanite, Aurora Borealis, Arctic Blue, Amber Yellow, Brown, Cobalt, Champagne, Crystal, Cubic Zirconia White, Aqua Blue Diamond, White Diamond FGH SI, Light Brown Diamond, Teal Blue Diamond, Fancy Brown, Frosty Mint, Fancy Purple, Green, Jet, Light Chrome, Lilac, Lavender, Mocca, Mint Green, Pink, Primrose, Paradise Shine, Pistachio, Periwinkle, Coral, Red, Rose Peach, Sapphire Light, Sunflower, Smoke Grey, Salmon Pink, Silver Night, Silver Shade, Tangerine, White Shimmer, Aqua Blue, Blue, Baby Pink, Brandy Wine, Blazing Red, Honey, Ice Blue, Khaki, Light Pink, Mystic Green, Paraiba, Poppy, Pink Red, Rainforest, Swiss Blue, Sky blue, Salmon, Violet, Violac, White Topaz, Yellow Topaz
+   Diamond Grade: None, Regular, SI, VS, FGH SI
+   Size (mm): 1, 1.25, 1.5, 10, 11, 12, 13, 14, 15, 17, 18, 19.5, 2, 2.5, 20, 21, 22, 26, 29, 3, 3.5, 4, 5, 6, 7, 8, 9, 1.5x3, 3x6, 4x2, 5x5, 6x8, 24, 4x8, 5x8, 2x3, 2x4, 5x7, 7x5, 28, 3x1, 3x4, 6.5, 6x13, 7.5, 9.5, 6x3, 16
+   Material: Ceramic, Opal, Diamond, Chrysoberyl, Quartz, Beryl, Zircon, Chalcedony, Tourmaline, Garnet, Hematite, Dichroite, Jade, Sanidine Feldspar, Lapis Lazuli, Feldspar, Turquoise, Olivine, Ruby, Sapphire, Pleochroic/Trichroic, Lab Created, Cubic Zirconia, Spinel, Corundum, Nano, Topaz
+   Type: Synthetic, Genuine, Lab Created
+   Cut (Shape): Round, Marquise, Princess, Bullet, Square, Oval, Pear, Trillion, Heart, Flatback, Tapered, Emrald, Octagon
+   
+   The user has the following request:
+    '{user_input}'
+
+    Write a valid SQL query for the database based for query. Ensure the query is efficient and syntactically correct.
+    RETURN ONLY SQL QUERY.
+"""
+
+    response = llm.invoke(prompt)
+    print("*****************************\n")
+    print(response)
+    print("*****************************\n\n")
+    return response.content.strip()
+
 # Function to generate SQL query using metadata and user input
 def generate_sql_query(user_input, metadata, distinct_values):
     prompt = f"""
-    The following is the structure of the SQLite database:
+    1. You are a personal assistant of Hank Kyaw, an inventory analyst at Anatometal. 
+    2. You are here to answer all the questions which ONLY related to the gems information.
+    3. When user ask about size such as 3x1.5 which could also mean 1.5x3 and other dimension such as 2x4 and so on.
+    4. When the user ask about a broad question provide a broader scope don't guess and pick a specific gems.
+    5. The following is the meta data of the gem SQLite database:
 
     {format_metadata(metadata, distinct_values)}
 
     The user has the following request:
     '{user_input}'
 
-    Write a valid SQL query for the database based on the structure above. Ensure the query is efficient and syntactically correct.
+    Write a valid SQL query for the database based for query. Ensure the query is efficient and syntactically correct.
     RETURN ONLY SQL QUERY.
     """
     response = llm.invoke(prompt)
@@ -163,22 +197,23 @@ def main():
             break
 
         # Step 1: Generate SQL query
-        sql_query = generate_sql_query(user_input, metadata, distinct_values)
+        sql_query = hardcoded_metadata(user_input)
         print(f"Generated SQL Query:\n{sql_query}")
 
-        # Step 2: Execute query and fetch results
+        # # Step 2: Execute query and fetch results
         results = execute_query(db_path, sql_query)
-
-        # Step 3: Validate results and provide feedback
-        feedback, is_valid = validate_and_rephrase(user_input, sql_query, results)
-        print(feedback)
-
-        # Step 4: Retry if necessary
-        if not is_valid:
-            sql_query = retry_query(user_input, sql_query, metadata, distinct_values)
-            print("Retrying with updated query...\n")
-        else:
-            print("Query successfully executed and validated.\n")
+        print(results)
+        #
+        # # Step 3: Validate results and provide feedback
+        # feedback, is_valid = validate_and_rephrase(user_input, sql_query, results)
+        # print(feedback)
+        #
+        # # Step 4: Retry if necessary
+        # if not is_valid:
+        #     sql_query = retry_query(user_input, sql_query, metadata, distinct_values)
+        #     print("Retrying with updated query...\n")
+        # else:
+        #     print("Query successfully executed and validated.\n")
 
 if __name__ == "__main__":
     main()
